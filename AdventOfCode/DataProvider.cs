@@ -17,12 +17,12 @@ namespace AdventOfCode
         /// <summary>
         /// Stores the measurements file path.
         /// </summary>
-        private static string MEASUREMENTS_PATH = @"C:\Users\victor.verhille\Documents\Visual Studio 2017\Projects\AdventOfCode\AdventOfCode\Measurements.txt";
+        private static string MEASUREMENTS_PATH = @"..\..\Measurements.txt";
 
         /// <summary>
         /// Stores the Movement inputs file path.
         /// </summary>
-        private static string MOVEMENTINPUTS_PATH = @"C:\Users\victor.verhille\Documents\Visual Studio 2017\Projects\AdventOfCode\AdventOfCode\MovementInputs.txt";
+        private static string MOVEMENTINPUTS_PATH = @"..\..\MovementInputs.txt";
 
         #endregion
 
@@ -34,7 +34,7 @@ namespace AdventOfCode
         /// <returns></returns>
         public static int[] GetSonarRawMeasurements()
         {
-            return File.ReadLines(DataProvider.MEASUREMENTS_PATH).Select(pLine => int.Parse(pLine)).ToArray();
+            return File.ReadLines(Utils.GetFullPath(DataProvider.MEASUREMENTS_PATH)).Select(pLine => int.Parse(pLine)).ToArray();
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace AdventOfCode
         public static Tuple<int, int> GetPositionFromMovementInputs()
         {
             int lHorizontal = 0, lDepth = 0, lAim = 0;
-            File.ReadLines(DataProvider.MOVEMENTINPUTS_PATH).ForEach<string>(pLine => HandleMovementInput(pLine, ref lHorizontal, ref lDepth, ref lAim));
+            File.ReadLines(Utils.GetFullPath(DataProvider.MOVEMENTINPUTS_PATH)).ForEach<string>(pLine => HandleMovementInput(pLine, ref lHorizontal, ref lDepth, ref lAim));
             return new Tuple<int, int>(lHorizontal, lDepth);
         }
 
