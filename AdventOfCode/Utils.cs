@@ -39,6 +39,16 @@ namespace AdventOfCode
         }
 
         /// <summary>
+        /// Multiplies the two items of a tuple.
+        /// </summary>
+        /// <param name="pTuple"></param>
+        /// <returns></returns>
+        public static int Multiply(Tuple<int, int> pTuple)
+        {
+            return pTuple.Item1 * pTuple.Item2;
+        }
+
+        /// <summary>
         /// Gets the path of the given file.
         /// </summary>
         /// <param name="pRelativePath">The relative path</param>
