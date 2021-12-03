@@ -21,7 +21,7 @@ namespace AdventOfCode
         static void Main(string[] pArgs)
         {
             ADay lDay = new Day3(); 
-            Console.WriteLine(lDay.SolvePart1());
+            Console.WriteLine(lDay.SolvePart2());
             Console.ReadLine();
         }
 

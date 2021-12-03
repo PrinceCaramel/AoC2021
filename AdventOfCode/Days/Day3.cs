@@ -42,7 +42,7 @@ namespace AdventOfCode.Days
         {
             get
             {
-                return pInput => pInput.ToString();
+                return pInput => Utils.Multiply(this.GetO2AndCO2AsTuple(pInput)).ToString();
             }
         }
 
@@ -70,9 +70,10 @@ namespace AdventOfCode.Days
         {
             int lLength = pInput.First().Length;
             int[] lCache = new int[lLength];
+            List<int> lIndexes = Enumerable.Range(0, lLength).ToList();
             foreach (string lLine in pInput)
             {
-                this.SplitBinaryStringAndAddToArray(lLine, ref lCache);
+                this.SplitBinaryStringAndAddToArray(lLine, lIndexes, ref lCache);
             }
             return new Tuple<int, int>(this.GetGamma(lCache), this.GetEpsilon(lCache));
         }
@@ -84,7 +85,7 @@ namespace AdventOfCode.Days
         /// <returns></returns>
         private int GetGamma(int[] pInput)
         {
-            int[] lArrayOf0And1 = this.GetMax0Or1FromArray(pInput, pInput.Count() / 2);
+            int[] lArrayOf0And1 = pInput.Select(pInt => pInt < 0 ? 0 : 1).ToArray();
             int lResultInt = Utils.ConvertArrayOf0And1IntoInteger(lArrayOf0And1);
             return lResultInt;
         }
@@ -96,47 +97,84 @@ namespace AdventOfCode.Days
         /// <returns></returns>
         private int GetEpsilon(int[] pInput)
         {
-            int[] lArrayOf0And1 = this.GetMax0Or1FromArray(pInput, pInput.Count() / 2, false);
+            int[] lArrayOf0And1 = pInput.Select(pInt => pInt > 0 ? 0 : 1).ToArray();
             int lResultInt = Utils.ConvertArrayOf0And1IntoInteger(lArrayOf0And1);
             return lResultInt;
         }
 
         /// <summary>
-        /// Split a line and add the result to the given array.
+        /// Split a line and add the result to the given array. 
+        /// 2x -1 this way, we add either -1 or 1 
         /// </summary>
-        /// <param name="pLine"></param>
-        /// <param name="pArray"></param>
-        private void SplitBinaryStringAndAddToArray(string pLine, ref int[] pArray)
+        /// <param name="pLine">The line to split</param>
+        /// <param name="pArray">The array</param>
+        private void SplitBinaryStringAndAddToArray(string pLine, List<int> pIndexes, ref int[] pArray)
         {
-            for (int lIndex = 0; lIndex < pLine.Length; lIndex++)
+            foreach (int lIndex in pIndexes)
             {
-                pArray[lIndex] += int.Parse(pLine[lIndex].ToString());
+                pArray[lIndex] += 2 * int.Parse(pLine[lIndex].ToString()) - 1;
             }
         }
 
         /// <summary>
-        /// Turns an array of int, into a array of 1 or 0 according to a given threshold.
+        /// Gets the O2 and CO2 as a tuple.
         /// </summary>
-        /// <param name="pArray"></param>
-        /// <param name="pThreshold"></param>
+        /// <param name="pInput"></param>
         /// <returns></returns>
-        private int[] GetMax0Or1FromArray(int[] pArray, int pThreshold, bool pMax = true)
+        private Tuple<int, int> GetO2AndCO2AsTuple(IEnumerable<string> pInput)
         {
-            int lLength = pArray.Length;
-            Func<int, int, bool> lFunction;
-            if (pMax)
+            return new Tuple<int, int>(this.GetO2Support(pInput), this.GetCO2Support(pInput));
+        }
+
+        /// <summary>
+        /// Gets the O2 support.
+        /// </summary>
+        /// <param name="pInput"></param>
+        /// <returns></returns>
+        private int GetO2Support(IEnumerable<string> pInput)
+        {
+            int lLineLength = pInput.First().Length;
+            int lResult = Convert.ToInt32(this.Recursive(pInput, lLineLength, 0, pVal => pVal < 0 ? 0 : 1), 2);
+            return lResult;
+        }
+
+        /// <summary>
+        /// Gets the CO2 support.
+        /// </summary>
+        /// <param name="pInput"></param>
+        /// <returns></returns>
+        private int GetCO2Support(IEnumerable<string> pInput)
+        {
+            int lLineLength = pInput.First().Length;
+            int lResult = Convert.ToInt32(this.Recursive(pInput, lLineLength, 0, pVal => pVal >= 0 ? 0 : 1), 2);
+            return lResult;
+        }
+
+        /// <summary>
+        /// Recursive method to get the last value according to a bitcriteria.
+        /// </summary>
+        /// <param name="pInput"></param>
+        /// <param name="pLineLength"></param>
+        /// <param name="pAcc"></param>
+        /// <param name="pBitCriteriaFunction"></param>
+        /// <returns></returns>
+        private string Recursive(IEnumerable<string> pInput, int pLineLength, int pAcc, Func<int, int> pBitCriteriaFunction)
+        {
+            if (pInput.Count() <= 1)
             {
-                lFunction = (pRight, pLeft) => pRight < pLeft; 
+                return pInput.FirstOrDefault();
             }
-            else
+
+            int[] lCache = new int[pLineLength];
+            List<int> lIndexes = new List<int> { pAcc };
+            foreach (string lLine in pInput)
             {
-                lFunction = (pRight, pLeft) => pRight > pLeft;
+                this.SplitBinaryStringAndAddToArray(lLine, lIndexes, ref lCache);
             }
-            for (int lIndex = 0; lIndex < lLength; lIndex++)
-            {
-                pArray[lIndex] = lFunction(pArray[lIndex], pThreshold) ? 0 : 1;
-            }
-            return pArray;
+            int lBitCriteria = pBitCriteriaFunction(lCache[pAcc]);
+
+            IEnumerable<string> lNewArray = pInput.Where(pLine => int.Parse(pLine[pAcc].ToString()) == lBitCriteria).ToArray();
+            return this.Recursive(lNewArray, pLineLength, pAcc + 1, pBitCriteriaFunction);
         }
 
         #endregion
