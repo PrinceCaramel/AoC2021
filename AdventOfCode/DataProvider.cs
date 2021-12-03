@@ -17,12 +17,17 @@ namespace AdventOfCode
         /// <summary>
         /// Stores the measurements file path.
         /// </summary>
-        public const string MEASUREMENTS_PATH = @"..\..\Measurements.txt";
+        public const string MEASUREMENTS_PATH = @"..\..\Data\Measurements.txt";
 
         /// <summary>
         /// Stores the Movement inputs file path.
         /// </summary>
-        public const string MOVEMENTINPUTS_PATH = @"..\..\MovementInputs.txt";
+        public const string MOVEMENTINPUTS_PATH = @"..\..\Data\MovementInputs.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY3INPUTS_PATH = @"..\..\Data\Day3Inputs.txt";
 
         #endregion
     }

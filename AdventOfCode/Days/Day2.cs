@@ -31,7 +31,6 @@ namespace AdventOfCode.Days
         {
             get
             {
-
                 return pInput => Utils.Multiply(Day2.GetPositionFromMovementInputs(pInput)).ToString();
             }
         }

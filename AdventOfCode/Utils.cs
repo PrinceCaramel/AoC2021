@@ -57,5 +57,15 @@ namespace AdventOfCode
         {
             return Path.Combine(Directory.GetCurrentDirectory(), pRelativePath);
         }
+
+        /// <summary>
+        /// Convert an array of 0 and 1 into an int.
+        /// </summary>
+        /// <param name="p0And1Array"></param>
+        /// <returns></returns>
+        public static int ConvertArrayOf0And1IntoInteger(int[] p0And1Array)
+        {
+            return Convert.ToInt32(string.Join("", p0And1Array), 2);
+        }
     }
 }
