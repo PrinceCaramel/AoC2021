@@ -56,7 +56,7 @@ namespace AdventOfCode.Days
         {
             get
             {
-                return pInput => this.ComputePart1(pInput).ToString();
+                return pInput => this.Compute(pInput, RunPart1).ToString();
             }
         }
 
@@ -67,7 +67,7 @@ namespace AdventOfCode.Days
         {
             get
             {
-                return pInput => this.ComputePart2(pInput).ToString();
+                return pInput => this.Compute(pInput, RunPart2).ToString();
             }
         }
 
@@ -87,14 +87,15 @@ namespace AdventOfCode.Days
         #region Methods
 
         /// <summary>
-        /// Computes the first puzzle.
+        /// Computes the puzzle.
         /// </summary>
         /// <param name="pInput"></param>
+        /// <param name="pMethod"></param>
         /// <returns></returns>
-        private int ComputePart1(IEnumerable<string> pInput)
+        private int Compute(IEnumerable<string> pInput, Action pMethod)
         {
             this.InitializesData(pInput.ToList());
-            this.RunPart1();
+            pMethod();
             return this.mWinningBoard.GetSumOfUnmarkedNumbers() * this.mWinningValue;
         }
 
@@ -120,18 +121,6 @@ namespace AdventOfCode.Days
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Computes the first puzzle.
-        /// </summary>
-        /// <param name="pInput"></param>
-        /// <returns></returns>
-        private int ComputePart2(IEnumerable<string> pInput)
-        {
-            this.InitializesData(pInput.ToList());
-            this.RunPart2();
-            return this.mWinningBoard.GetSumOfUnmarkedNumbers() * this.mWinningValue;
         }
 
         /// <summary>
