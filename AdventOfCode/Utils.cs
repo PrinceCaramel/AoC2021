@@ -67,5 +67,21 @@ namespace AdventOfCode
         {
             return Convert.ToInt32(string.Join("", p0And1Array), 2);
         }
+
+        /// <summary>
+        /// Pop method for a list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="pList"></param>
+        /// <returns></returns>
+        public static T Pop<T>(this List<T> pList)
+        {
+            T lFirst = pList.FirstOrDefault();
+            if (lFirst != null)
+            {
+                pList.RemoveAt(0);
+            }
+            return lFirst;
+        }
     }
 }

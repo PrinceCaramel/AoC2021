@@ -29,6 +29,16 @@ namespace AdventOfCode
         /// </summary>
         public const string DAY3INPUTS_PATH = @"..\..\Data\Day3Inputs.txt";
 
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string BINGOTESTINPUTS_PATH = @"..\..\Data\BingoTest.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string BINGOINPUTS_PATH = @"..\..\Data\BingoDay4.txt";
+
         #endregion
     }
 }

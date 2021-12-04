@@ -32,8 +32,7 @@ namespace AdventOfCode.Days
         {
             get
             {
-                Submarine lSubmarine = new Submarine();
-                return pInput => lSubmarine.Sonar.GetMeasurementsLargerThanPrevious(pInput.Select(pLine => int.Parse(pLine))).ToString();
+                return pInput => this.GetMeasurementsLargerThanPrevious(pInput.Select(pLine => int.Parse(pLine))).ToString();
             }
         }
 
@@ -44,8 +43,7 @@ namespace AdventOfCode.Days
         {
             get
             {
-                Submarine lSubmarine = new Submarine();
-                return pInput => lSubmarine.Sonar.GetMeasurementsLargerThanPrevious(Day1.GetSonar3Measurements(pInput)).ToString();
+                return pInput => this.GetMeasurementsLargerThanPrevious(Day1.GetSonar3Measurements(pInput)).ToString();
             }
         }
 
@@ -86,6 +84,29 @@ namespace AdventOfCode.Days
                 lResult.Add(lSum);
             }
             return lResult;
+        }
+
+        /// <summary>
+        /// Gets the measurements count that are larger than the previous one.
+        /// </summary>
+        /// <param name="pMeasurements"></param>
+        /// <returns></returns>
+        public int GetMeasurementsLargerThanPrevious(IEnumerable<int> pMeasurements)
+        {
+            int lCounter = 0;
+            int lInputCount = pMeasurements.Count();
+            if (pMeasurements == null || lInputCount <= 1)
+            {
+                return lCounter;
+            }
+            for (int lIndex = 1; lIndex < lInputCount; lIndex++)
+            {
+                if (pMeasurements.ElementAt(lIndex - 1) < pMeasurements.ElementAt(lIndex))
+                {
+                    lCounter++;
+                }
+            }
+            return lCounter;
         }
 
         #endregion Methods
