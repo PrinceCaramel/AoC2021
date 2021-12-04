@@ -31,12 +31,6 @@ namespace AdventOfCode.DataModel
             private set;
         }
 
-        /// <summary>
-        /// Gets the id of the board.
-        /// </summary>
-        public int Id
-        { get; private set; }
-
         #endregion Properties
         
         #region Constructors
@@ -44,9 +38,8 @@ namespace AdventOfCode.DataModel
         /// <summary>
         /// Initializes a new instance of the <see cref="BingoBoard"/> class.
         /// </summary>
-        public BingoBoard(List<string> pBingoBoard, int pId)
+        public BingoBoard(List<string> pBingoBoard)
         {
-            this.Id = pId;
             this.BingoBoardAsList = new List<List<int>>();
             this.InitializesBingoBoard(pBingoBoard);
         }

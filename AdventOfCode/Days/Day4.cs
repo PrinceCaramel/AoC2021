@@ -152,7 +152,6 @@ namespace AdventOfCode.Days
         {
             int lIndex = 0;
             int lNumberOfLines = pInput.Count();
-            int lBingoBoardId = 0;
             while (lIndex < lNumberOfLines)
             {
                 if (lIndex == 0)
@@ -163,8 +162,7 @@ namespace AdventOfCode.Days
                 else
                 {
                     List<string> lLines = new List<string>() { pInput[lIndex], pInput[lIndex+1], pInput[lIndex+2], pInput[lIndex+3], pInput[lIndex+4] };
-                    this.mBingoBoards.Add(new BingoBoard(lLines, lBingoBoardId));
-                    lBingoBoardId++;
+                    this.mBingoBoards.Add(new BingoBoard(lLines));
                     lIndex += 6;
                 }
             }
