@@ -22,15 +22,6 @@ namespace AdventOfCode.DataModel
             private set;
         }
 
-        /// <summary>
-        /// Bingo board represented as a list of list of bool
-        /// </summary>
-        public List<List<bool>> BingoBoardCheck
-        {
-            get;
-            private set;
-        }
-
         #endregion Properties
         
         #region Constructors
@@ -54,12 +45,6 @@ namespace AdventOfCode.DataModel
         /// <param name="pBingoBoard"></param>
         private void InitializesBingoBoard(List<string> pBingoBoard)
         {
-            this.BingoBoardCheck = new List<List<bool>>();
-            this.BingoBoardCheck.Add(new List<bool> { false, false, false, false, false });
-            this.BingoBoardCheck.Add(new List<bool> { false, false, false, false, false });
-            this.BingoBoardCheck.Add(new List<bool> { false, false, false, false, false });
-            this.BingoBoardCheck.Add(new List<bool> { false, false, false, false, false });
-            this.BingoBoardCheck.Add(new List<bool> { false, false, false, false, false });
             pBingoBoard.ForEach(pLine => this.BingoBoardAsList.Add(this.SplitLine(pLine)));
         }
 
@@ -99,7 +84,7 @@ namespace AdventOfCode.DataModel
                 {
                     if (lValue == pValue)
                     {
-                        this.BingoBoardCheck[lColumn][lRow] = true;
+                        this.BingoBoardAsList[lColumn][lRow] = -1;
                         break;
                     }
                     lRow++;
@@ -114,7 +99,7 @@ namespace AdventOfCode.DataModel
         /// <returns></returns>
         public bool IsWinning()
         {
-            if (this.BingoBoardCheck.Any(pLine => pLine.All(pValue => pValue)))
+            if (this.BingoBoardAsList.Any(pLine => pLine.All(pValue => pValue == -1)))
             {
                 return true;
             }
@@ -122,7 +107,7 @@ namespace AdventOfCode.DataModel
             {
                 for (int lIndex = 0; lIndex < 5; lIndex++)
                 {
-                    bool lResult = this.BingoBoardCheck[0][lIndex] && this.BingoBoardCheck[1][lIndex] && this.BingoBoardCheck[2][lIndex] && this.BingoBoardCheck[3][lIndex] && this.BingoBoardCheck[4][lIndex];
+                    bool lResult = (this.BingoBoardAsList[0][lIndex] + this.BingoBoardAsList[1][lIndex] + this.BingoBoardAsList[2][lIndex] + this.BingoBoardAsList[3][lIndex] + this.BingoBoardAsList[4][lIndex]) == -5;
                     if (lResult)
                     {
                         return true;
@@ -143,9 +128,10 @@ namespace AdventOfCode.DataModel
             {
                 for (int lRowIndex = 0; lRowIndex < 5; lRowIndex++)
                 {
-                    if (!this.BingoBoardCheck[lColumnIndex][lRowIndex])
+                    int lValue = this.BingoBoardAsList[lColumnIndex][lRowIndex];
+                    if (lValue != -1)
                     {
-                        lAcc += this.BingoBoardAsList[lColumnIndex][lRowIndex];
+                        lAcc += lValue;
                     }
                 }
             }
