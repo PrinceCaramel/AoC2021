@@ -108,7 +108,7 @@ namespace AdventOfCode.Days
             for (int lIndex = 0; lIndex <= this.mNewbornFishDuration; lIndex++)
             {
                 lResult[lIndex] = this.mPopulationByDays[(lIndex + 1) % (this.mNewbornFishDuration + 1)];
-                if (lIndex == 6)
+                if (lIndex == this.mReproductionDuration)
                 {
                     lResult[lIndex] = lResult[lIndex] + this.mPopulationByDays[0];
                 }
