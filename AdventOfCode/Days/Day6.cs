@@ -23,7 +23,6 @@ namespace AdventOfCode.Days
         /// </summary>
         private int mNewbornFishDuration = 0;
 
-
         /// <summary>
         /// Stores the population by day.
         /// </summary>
@@ -140,7 +139,6 @@ namespace AdventOfCode.Days
         /// <returns></returns>
         private UInt64 CountPopulation()
         {
-            //return this.mLanternfishPopulation.Count();
             UInt64 lResult = 0;
             this.mPopulationByDays.ForEach<UInt64>(pValue => lResult += pValue);
             return lResult;
