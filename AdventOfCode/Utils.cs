@@ -28,6 +28,41 @@ namespace AdventOfCode
         public static string DOWN = "down";
 
         /// <summary>
+        /// Stores the a constant.
+        /// </summary>
+        public static char A = 'a';
+
+        /// <summary>
+        /// Stores the b constant.
+        /// </summary>
+        public static char B = 'b';
+
+        /// <summary>
+        /// Stores the c constant.
+        /// </summary>
+        public static char C = 'c';
+
+        /// <summary>
+        /// Stores the d constant.
+        /// </summary>
+        public static char D = 'd';
+
+        /// <summary>
+        /// Stores the e constant.
+        /// </summary>
+        public static char E = 'e';
+
+        /// <summary>
+        /// Stores the f constant.
+        /// </summary>
+        public static char F = 'f';
+
+        /// <summary>
+        /// Stores the g constant.
+        /// </summary>
+        public static char G = 'g';
+
+        /// <summary>
         /// ForEach Linq extension.
         /// </summary>
         public static void ForEach<T>(this IEnumerable<T> pSource, Action<T> pAction)

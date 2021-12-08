@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataModel\BingoBoard.cs" />
+    <Compile Include="DataModel\DigitSignalPattern.cs" />
     <Compile Include="DataModel\WindLine.cs" />
     <Compile Include="DataProvider.cs" />
     <Compile Include="Days\ADay.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Days\Day5.cs" />
     <Compile Include="Days\Day6.cs" />
     <Compile Include="Days\Day7.cs" />
+    <Compile Include="Days\Day8.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils.cs" />
@@ -71,6 +73,8 @@
     <Content Include="Data\Day6InputTest.txt" />
     <Content Include="Data\Day7Input.txt" />
     <Content Include="Data\Day7TestInput.txt" />
+    <Content Include="Data\Day8Input.txt" />
+    <Content Include="Data\Day8TestInput.txt" />
     <Content Include="Data\Measurements.txt" />
     <Content Include="Data\MovementInputs.txt" />
   </ItemGroup>
