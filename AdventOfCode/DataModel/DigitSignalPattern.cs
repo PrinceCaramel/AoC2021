@@ -161,9 +161,7 @@ namespace AdventOfCode.DataModel
         /// </summary>
         private void ComputeDigit9()
         {
-            Segments l47 = this.mDecodedIntBySegments[4] | this.mDecodedIntBySegments[7];
-            Segments l235 = this.mCodedSegmentsByAmountOfSegments[5].Aggregate(Segments.All, (pAcc, pNext) => pAcc &= pNext, pAcc => pAcc);
-            this.mDecodedIntBySegments.Add(9, l47 | l235);
+            this.mDecodedIntBySegments.Add(9, this.mCodedSegmentsByAmountOfSegments[6].First(pSeg => (pSeg | this.mDecodedIntBySegments[4]) == pSeg));
         }
 
         /// <summary>

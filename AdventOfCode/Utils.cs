@@ -118,5 +118,43 @@ namespace AdventOfCode
             }
             return lFirst;
         }
+
+        /// <summary>
+        /// Adds a tuple to a list of tuple if it doesn't already exist.
+        /// </summary>
+        /// <param name="pCoordinates"></param>
+        /// <param name="pElementToAdd"></param>
+        public static void AddTuple(this List<Tuple<int, int>> pCoordinates, Tuple<int, int> pElementToAdd)
+        {
+            if (!pCoordinates.Any(pCoord => pCoord.Equals(pElementToAdd)))
+            {
+                pCoordinates.Add(pElementToAdd);
+            }
+        }
+
+        /// <summary>
+        /// Removes a tuple from a list if it contains it.
+        /// </summary>
+        /// <param name="pCoordinates"></param>
+        /// <param name="pElementToRemove"></param>
+        public static void RemoveTuple(this List<Tuple<int, int>> pCoordinates, Tuple<int, int> pElementToRemove)
+        {
+            Tuple<int, int> lToRemove = pCoordinates.FirstOrDefault(pCoord => pCoord.Equals(pElementToRemove));
+            if (lToRemove != null)
+            {
+                pCoordinates.Remove(lToRemove);
+            }
+        }
+
+        /// <summary>
+        /// Checks if a tuple is contained in a list of tuple.
+        /// </summary>
+        /// <param name="pCoordinates"></param>
+        /// <param name="pElement"></param>
+        /// <returns></returns>
+        public static bool ContainsTuple(this List<Tuple<int, int>> pCoordinates, Tuple<int, int> pElement)
+        {
+            return pCoordinates.Any(pTuple => pTuple.Equals(pElement));
+        }
     }
 }

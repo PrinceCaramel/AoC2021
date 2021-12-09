@@ -56,6 +56,7 @@
     <Compile Include="Days\Day6.cs" />
     <Compile Include="Days\Day7.cs" />
     <Compile Include="Days\Day8.cs" />
+    <Compile Include="Days\Day9.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils.cs" />
@@ -75,6 +76,8 @@
     <Content Include="Data\Day7TestInput.txt" />
     <Content Include="Data\Day8Input.txt" />
     <Content Include="Data\Day8TestInput.txt" />
+    <Content Include="Data\Day9Input.txt" />
+    <Content Include="Data\Day9TestInput.txt" />
     <Content Include="Data\Measurements.txt" />
     <Content Include="Data\MovementInputs.txt" />
   </ItemGroup>
