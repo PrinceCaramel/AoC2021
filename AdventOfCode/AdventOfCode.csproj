@@ -49,6 +49,7 @@
     <Compile Include="DataProvider.cs" />
     <Compile Include="Days\ADay.cs" />
     <Compile Include="Days\Day1.cs" />
+    <Compile Include="Days\Day10.cs" />
     <Compile Include="Days\Day2.cs" />
     <Compile Include="Days\Day3.cs" />
     <Compile Include="Days\Day4.cs" />
@@ -67,6 +68,8 @@
   <ItemGroup>
     <Content Include="Data\BingoDay4.txt" />
     <Content Include="Data\BingoTest.txt" />
+    <Content Include="Data\Day10Input.txt" />
+    <Content Include="Data\Day10TestInput.txt" />
     <Content Include="Data\Day3Inputs.txt" />
     <Content Include="Data\Day6Input.txt" />
     <Content Include="Data\Day5Input.txt" />
