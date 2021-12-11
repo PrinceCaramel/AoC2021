@@ -102,12 +102,12 @@ namespace AdventOfCode.Days
             {
                 if (this.GetClosingValuePart1(this.ValidateLine(lLine)) == 0)
                 {
-                    List<char> lClosingChar = new List<char>();
+                    List<char> lClosingChars = new List<char>();
                     while (this.mCurrentStack.Any())
                     {
-                        lClosingChar.Add(this.GetClosing(this.mCurrentStack.Pop()));
+                        lClosingChars.Add(this.GetClosingChar(this.mCurrentStack.Pop()));
                     }
-                    lValues.Add(lClosingChar.Aggregate((UInt64)0, (pAcc, pNext) => pAcc = 5 * pAcc + this.GetClosingValuePart2(pNext), pAcc => pAcc));
+                    lValues.Add(lClosingChars.Aggregate((UInt64)0, (pAcc, pNext) => pAcc = 5 * pAcc + this.GetClosingValuePart2(pNext), pAcc => pAcc));
                 }
             }
             lValues.Sort();
@@ -129,7 +129,7 @@ namespace AdventOfCode.Days
                 {
                     this.mCurrentStack.Push(lChar);
                 }
-                else if (this.GetClosing(this.mCurrentStack.Peek()).Equals(lChar))
+                else if (this.GetClosingChar(this.mCurrentStack.Peek()).Equals(lChar))
                 {
                     this.mCurrentStack.Pop();
                 }
@@ -147,7 +147,7 @@ namespace AdventOfCode.Days
         /// </summary>
         /// <param name="pOpenChar"></param>
         /// <returns></returns>
-        private char GetClosing(char pOpenChar)
+        private char GetClosingChar(char pOpenChar)
         {
             if (pOpenChar.Equals('('))
             {

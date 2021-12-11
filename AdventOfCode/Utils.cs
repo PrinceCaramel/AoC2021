@@ -156,5 +156,96 @@ namespace AdventOfCode
         {
             return pCoordinates.Any(pTuple => pTuple.Equals(pElement));
         }
+
+        /// <summary>
+        /// Get the neighbors of a point.
+        /// </summary>
+        /// <param name="pPoint"></param>
+        /// <returns></returns>
+        public static List<Tuple<int, int>> GetNeighbors(Tuple<int, int> pPoint, int pMaxCol, int pMaxRow, bool pIncludeDiagonals = false)
+        {
+            List<Tuple<int, int>> lResult = new List<Tuple<int, int>>();
+            if (pPoint.Item1 - 1 >= 0)
+            {
+                lResult.Add(new Tuple<int, int>(pPoint.Item1 - 1, pPoint.Item2));
+            }
+            if (pPoint.Item2 - 1 >= 0)
+            {
+                lResult.Add(new Tuple<int, int>(pPoint.Item1, pPoint.Item2 - 1));
+            }
+            if (pPoint.Item2 + 1 <= pMaxCol)
+            {
+                lResult.Add(new Tuple<int, int>(pPoint.Item1, pPoint.Item2 + 1));
+            }
+            if (pPoint.Item1 + 1 <= pMaxRow)
+            {
+                lResult.Add(new Tuple<int, int>(pPoint.Item1 + 1, pPoint.Item2));
+            }
+            if (pIncludeDiagonals)
+            {
+                if (pPoint.Item1 - 1 >= 0 && pPoint.Item2 - 1 >= 0)
+                {
+                    lResult.Add(new Tuple<int, int>(pPoint.Item1 - 1, pPoint.Item2 - 1));
+                }
+                if (pPoint.Item1 - 1 >= 0 && pPoint.Item2 + 1 <= pMaxCol)
+                {
+                    lResult.Add(new Tuple<int, int>(pPoint.Item1 - 1, pPoint.Item2 + 1));
+                }
+                if (pPoint.Item1 + 1 <= pMaxRow && pPoint.Item2 - 1 >= 0)
+                {
+                    lResult.Add(new Tuple<int, int>(pPoint.Item1 + 1, pPoint.Item2 - 1));
+                }
+                if (pPoint.Item1 + 1 <= pMaxRow && pPoint.Item2 + 1 <= pMaxCol)
+                {
+                    lResult.Add(new Tuple<int, int>(pPoint.Item1 + 1, pPoint.Item2 + 1));
+                }
+            }
+            return lResult;
+        }
+
+        /// <summary>
+        /// Gets the value from coordinates.
+        /// </summary>
+        /// <param name="pCoordinates"></param>
+        /// <returns></returns>
+        public static int GetValueFromTuple(this List<List<int>> pMap, Tuple<int, int> pCoordinates)
+        {
+            return pMap[pCoordinates.Item1][pCoordinates.Item2];
+        }
+
+        /// <summary>
+        /// Print a map.
+        /// </summary>
+        /// <param name="pMap"></param>
+        /// <returns></returns>
+        public static void MapPrint(this List<List<int>> pMap)
+        {
+            StringBuilder lStringBuilder = new StringBuilder();
+            foreach(List<int> lRow in pMap)
+            {
+                lStringBuilder.AppendLine(string.Join(string.Empty, lRow));
+            }
+            Console.WriteLine(lStringBuilder.ToString());
+        }
+
+        /// <summary>
+        /// Sets the value by coordinates.
+        /// </summary>
+        /// <param name="pMap"></param>
+        /// <param name="pCoordinates"></param>
+        /// <param name="pValue"></param>
+        public static void SetValueByCoordinates(this List<List<int>> pMap, Tuple<int,int> pCoordinates, int pValue)
+        {
+            pMap[pCoordinates.Item1][pCoordinates.Item2] = pValue;
+        }
+
+        /// <summary>
+        /// Prints a tuple.
+        /// </summary>
+        /// <param name="pTuple"></param>
+        public static void TuplePrint(this Tuple<int,int> pTuple)
+        {
+            Console.WriteLine("Tuple: " + pTuple.Item1 + " " + pTuple.Item2);
+        }
     }
 }

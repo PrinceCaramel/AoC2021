@@ -141,7 +141,7 @@ namespace AdventOfCode.Days
         /// <returns></returns>
         private int ComputeRiskLowPoints()
         {
-            return this.mLowPoints.Aggregate(0, (pAcc, pNext) => pAcc += this.GetValueFromTuple(pNext) + 1, pAcc => pAcc);
+            return this.mLowPoints.Aggregate(0, (pAcc, pNext) => pAcc += this.mHeightMap.GetValueFromTuple(pNext) + 1, pAcc => pAcc);
         }
 
         /// <summary>
@@ -154,9 +154,9 @@ namespace AdventOfCode.Days
                 for (int lColumn = 0; lColumn <= this.mMaxCol; lColumn++)
                 {
                     Tuple<int, int> lCoordinates = new Tuple<int, int>(lRow, lColumn);
-                    List<Tuple<int, int>> lNeighbors = this.GetNeighbors(lCoordinates);
-                    int lValue = this.GetValueFromTuple(lCoordinates);
-                    bool lShouldAdd = lNeighbors.All(pNeighbor => lValue < this.GetValueFromTuple(pNeighbor));
+                    List<Tuple<int, int>> lNeighbors = Utils.GetNeighbors(lCoordinates, this.mMaxCol, this.mMaxRow);
+                    int lValue = this.mHeightMap.GetValueFromTuple(lCoordinates);
+                    bool lShouldAdd = lNeighbors.All(pNeighbor => lValue < this.mHeightMap.GetValueFromTuple(pNeighbor));
                     if (lShouldAdd)
                     {
                         this.mLowPoints.Add(lCoordinates);
@@ -182,54 +182,13 @@ namespace AdventOfCode.Days
                 List<Tuple<int, int>> lNewNeighbors = new List<Tuple<int, int>>();
                 foreach (Tuple<int, int> lCoordinates in lAddedTuples)
                 {
-                    this.GetNeighbors(lCoordinates).ForEach(pTuple => lNewNeighbors.AddTuple(pTuple));
+                    Utils.GetNeighbors(lCoordinates, this.mMaxCol, this.mMaxRow).ForEach(pTuple => lNewNeighbors.AddTuple(pTuple));
                 }
-                lNewNeighbors.RemoveAll(pTuple => lResult.Contains(pTuple) || this.GetValueFromTuple(pTuple) == lMaxValue);
+                lNewNeighbors.RemoveAll(pTuple => lResult.Contains(pTuple) || this.mHeightMap.GetValueFromTuple(pTuple) == lMaxValue);
                 lAddedTuples.Clear();
                 lAddedTuples.AddRange(lNewNeighbors);
             }
             return lResult;
-        }
-
-        /// <summary>
-        /// Get the neighbors of a point.
-        /// </summary>
-        /// <param name="pPoint"></param>
-        /// <returns></returns>
-        private List<Tuple<int, int>> GetNeighbors(Tuple<int, int> pPoint)
-        {
-            List<Tuple<int, int>> lResult = new List<Tuple<int, int>>();
-            // TOP
-            if (pPoint.Item1 - 1 >= 0)
-            {
-                lResult.Add(new Tuple<int, int>(pPoint.Item1 - 1, pPoint.Item2));
-            }
-            // LEFT
-            if (pPoint.Item2 - 1 >= 0)
-            {
-                lResult.Add(new Tuple<int, int>(pPoint.Item1, pPoint.Item2 - 1));
-            }
-            // RIGHT
-            if (pPoint.Item2 + 1 <= this.mMaxCol)
-            {
-                lResult.Add(new Tuple<int, int>(pPoint.Item1, pPoint.Item2 + 1));
-            }
-            // BOTTOM
-            if (pPoint.Item1 + 1 <= this.mMaxRow)
-            {
-                lResult.Add(new Tuple<int, int>(pPoint.Item1 + 1, pPoint.Item2));
-            }
-            return lResult;
-        }
-
-        /// <summary>
-        /// Gets the value from coordinates.
-        /// </summary>
-        /// <param name="pCoordinates"></param>
-        /// <returns></returns>
-        private int GetValueFromTuple(Tuple<int, int> pCoordinates)
-        {
-            return this.mHeightMap[pCoordinates.Item1][pCoordinates.Item2];
         }
 
         #endregion
