@@ -210,7 +210,7 @@ namespace AdventOfCode
         /// <returns></returns>
         public static int GetValueFromTuple(this List<List<int>> pMap, Tuple<int, int> pCoordinates)
         {
-            return pMap[pCoordinates.Item1][pCoordinates.Item2];
+            return pMap[pCoordinates.Item2][pCoordinates.Item1];
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace AdventOfCode
         /// <param name="pValue"></param>
         public static void SetValueByCoordinates(this List<List<int>> pMap, Tuple<int,int> pCoordinates, int pValue)
         {
-            pMap[pCoordinates.Item1][pCoordinates.Item2] = pValue;
+            pMap[pCoordinates.Item2][pCoordinates.Item1] = pValue;
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace AdventOfCode
         /// <param name="pTuple"></param>
         public static void TuplePrint(this Tuple<int,int> pTuple)
         {
-            Console.WriteLine("Tuple: " + pTuple.Item1 + " " + pTuple.Item2);
+            Console.WriteLine(string.Format("Tuple X:{0} | Y:{1}", pTuple.Item1, pTuple.Item2));
         }
     }
 }
