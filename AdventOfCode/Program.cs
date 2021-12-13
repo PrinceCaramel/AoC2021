@@ -20,7 +20,7 @@ namespace AdventOfCode
         /// <param name="args"></param>
         static void Main(string[] pArgs)
         {
-            ADay lDay = new Day12(); 
+            ADay lDay = new Day13(); 
             Console.WriteLine(lDay.SolvePart1());
             Console.WriteLine(lDay.SolvePart2());
             Console.ReadLine();
