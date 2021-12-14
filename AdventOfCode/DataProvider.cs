@@ -134,6 +134,16 @@ namespace AdventOfCode
         /// </summary>
         public const string DAY13INPUTS_PATH = @"..\..\Data\Day13Input.txt";
 
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY14TESTINPUTS_PATH = @"..\..\Data\Day14TestInput.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY14INPUTS_PATH = @"..\..\Data\Day14Input.txt";
+
         #endregion
     }
 }
