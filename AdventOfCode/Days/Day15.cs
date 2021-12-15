@@ -35,7 +35,7 @@ namespace AdventOfCode.Days
         {
             get
             {
-                return DataProvider.DAY15INPUTS_PATH;
+                return DataProvider.DAY15TESTINPUTS_PATH;
             }
         }
 
@@ -202,33 +202,6 @@ namespace AdventOfCode.Days
                 lStr.AppendLine();
             }
             Console.WriteLine(lStr.ToString());
-        }
-
-
-
-        private void Compate()
-        {
-            StringBuilder lStr = new StringBuilder();
-            for (int lY = 0; lY <= this.mMaxRowIndex; lY++)
-            {
-                for (int lX = 0; lX <= this.mMaxColIndex; lX++)
-                {
-                    lStr.Append(this.mGraphWithValue[string.Format("{0},{1}", lX, lY)]);
-                }
-                lStr.AppendLine();
-            }
-
-            StringBuilder lStr2 = new StringBuilder();
-
-            IEnumerable<string> lInput =  System.IO.File.ReadLines(Utils.GetFullPath(@"..\..\Data\Putpu.txt"));
-            foreach (string lL in lInput)
-            {
-                lStr2.AppendLine(lL);
-            }
-            
-            bool lC = lStr.ToString().Equals(lStr2.ToString());
-            Console.WriteLine(lC);
-
         }
 
         private void AddPred(string pNode, string pPred)

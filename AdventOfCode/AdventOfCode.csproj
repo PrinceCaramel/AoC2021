@@ -99,7 +99,6 @@
     <Content Include="Data\Day9TestInput.txt" />
     <Content Include="Data\Measurements.txt" />
     <Content Include="Data\MovementInputs.txt" />
-    <Content Include="Data\Putpu.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
