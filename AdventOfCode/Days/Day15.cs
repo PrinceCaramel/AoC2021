@@ -48,13 +48,18 @@ namespace AdventOfCode.Days
         #region Properties
 
         /// <summary>
+        /// A flag indicating whether we want to time the process or not.
+        /// </summary>
+        protected override bool ShouldTimeStamp => true;
+
+        /// <summary>
         /// Gets the path of the input.
         /// </summary>
         protected override string Path
         {
             get
             {
-                return DataProvider.DAY15TESTINPUTS_PATH;
+                return DataProvider.DAY15INPUTS_PATH;
             }
         }
 
@@ -160,10 +165,13 @@ namespace AdventOfCode.Days
         /// <param name="pNode2"></param>
         private void UpdateDistance(string pNode1, string pNode2)
         {
-            if (this.mDistances[pNode2] > (this.mDistances[pNode1] + this.mGraphWithValue[pNode1]))
+            if (this.mNodes.Contains(pNode2))
             {
-                this.mDistances[pNode2] = this.mDistances[pNode1] + this.mGraphWithValue[pNode1];
-                this.AddPredecessor(pNode2, pNode1);
+                if (this.mDistances[pNode2] > (this.mDistances[pNode1] + this.mGraphWithValue[pNode1]))
+                {
+                    this.mDistances[pNode2] = this.mDistances[pNode1] + this.mGraphWithValue[pNode1];
+                    this.AddPredecessor(pNode2, pNode1);
+                }
             }
         }
 
@@ -176,7 +184,8 @@ namespace AdventOfCode.Days
             {
                 string lNode = this.FindMinimum();
                 this.mNodes.Remove(lNode);
-                Utils.GetNeighbors(lNode, this.mMaxColIndex, this.mMaxRowIndex).ForEach(pNb => this.UpdateDistance(lNode, pNb));
+                List<string> lNeighbors = Utils.GetNeighbors(lNode, this.mMaxColIndex, this.mMaxRowIndex);
+                lNeighbors.ForEach(pNb => this.UpdateDistance(lNode, pNb));
             }
         }
 
