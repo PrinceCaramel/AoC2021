@@ -19,7 +19,7 @@ namespace AdventOfCode.Days
         private Dictionary<string, int> mGraphWithValue;
         private List<string> mNodes;
         private Dictionary<string, int> mDistance;
-        private Dictionary<string, string> mPred = new Dictionary<string, string>();
+        private Dictionary<string, string> mNodeToPredecessor;
 
         private int mMaxColIndex;
         private int mMaxRowIndex;
@@ -57,7 +57,7 @@ namespace AdventOfCode.Days
         {
             get
             {
-                return pInput => this.Run(pInput, 2);
+                return pInput => this.Run(pInput, 5);
             }
         }
 
@@ -80,33 +80,7 @@ namespace AdventOfCode.Days
         /// Initializes the data.
         /// </summary>
         /// <param name="pInput"></param>
-        private void InitializeDataPart1(IEnumerable<string> pInput)
-        {
-            this.mGraphWithValue = new Dictionary<string, int>();
-            this.mDistance = new Dictionary<string, int>();
-            this.mNodes = new List<string>();
-            this.mMaxColIndex = pInput.First().Count() - 1;
-            this.mMaxRowIndex = pInput.Count() - 1;
-            this.mPred = new Dictionary<string, string>();
-            for (int lY = 0; lY < pInput.Count(); lY++)
-            {
-                string lLine = pInput.ElementAt(lY);
-                for (int lX = 0; lX < lLine.Count(); lX++)
-                {
-                    string lId = string.Format("{0},{1}", lX, lY);
-                    this.mGraphWithValue.Add(lId, int.Parse(lLine[lX].ToString()));
-                    this.mDistance.Add(lId, int.MaxValue);
-                    this.mNodes.Add(lId);
-                }
-            }
-            this.mDistance["0,0"] = 0;
-        }
-
-        /// <summary>
-        /// Initializes the data.
-        /// </summary>
-        /// <param name="pInput"></param>
-        private void InitializeDataPart2(IEnumerable<string> pInput, int pSize)
+        private void InitializeData(IEnumerable<string> pInput, int pSize)
         {
             this.mGraphWithValue = new Dictionary<string, int>();
             this.mDistance = new Dictionary<string, int>();
@@ -115,7 +89,7 @@ namespace AdventOfCode.Days
             int lMaxRowInput = pInput.Count();
             this.mMaxColIndex = (lMaxColInput * pSize) - 1;
             this.mMaxRowIndex =(lMaxRowInput * pSize) - 1;
-            this.mPred = new Dictionary<string, string>();
+            this.mNodeToPredecessor = new Dictionary<string, string>();
             for (int lY = 0; lY < pInput.Count(); lY++)
             {
                 string lLine = pInput.ElementAt(lY);
@@ -125,7 +99,7 @@ namespace AdventOfCode.Days
                     {
                         for (int lSizeY = 0; lSizeY < pSize; lSizeY++)
                         {
-                            string lId = string.Format("{0},{1}", lX + (lSizeX * lMaxColInput), lY + (lSizeY * lMaxRowInput));
+                            string lId = this.GetId(lX + (lSizeX * lMaxColInput), lY + (lSizeY * lMaxRowInput));
                             int lValue = (int.Parse(lLine[lX].ToString()) + lSizeX + lSizeY);
                             if (lValue >= 10)
                             {
@@ -138,13 +112,17 @@ namespace AdventOfCode.Days
                     }
                 }
             }
-            this.mDistance["0,0"] = 0;
+            this.mDistance[this.GetId(0,0)] = 0;
         }
 
+        /// <summary>
+        /// Find the minimum.
+        /// </summary>
+        /// <returns></returns>
         private string FindMinimum()
         {
             int lMinimum = int.MaxValue;
-            string lResultNode = "-1,-1";
+            string lResultNode = this.GetId(-1,-1);
             foreach (string lNode in this.mNodes)
             {
                 if (this.mDistance[lNode] < lMinimum)
@@ -156,15 +134,23 @@ namespace AdventOfCode.Days
             return lResultNode;
         }
 
+        /// <summary>
+        /// Updates the distance.
+        /// </summary>
+        /// <param name="pNode1"></param>
+        /// <param name="pNode2"></param>
         private void UpdateDistance(string pNode1, string pNode2)
         {
             if (this.mDistance[pNode2] > (this.mDistance[pNode1] + this.mGraphWithValue[pNode1]))
             {
                 this.mDistance[pNode2] = this.mDistance[pNode1] + this.mGraphWithValue[pNode1];
-                this.AddPred(pNode2, pNode1);
+                this.AddPredecessor(pNode2, pNode1);
             }
         }
 
+        /// <summary>
+        /// Runs the djikstra algorithm.
+        /// </summary>
         private void Djikstra()
         {
             while (this.mNodes.Any())
@@ -175,61 +161,63 @@ namespace AdventOfCode.Days
             }
         }
 
-        private string Run(IEnumerable<string> pInput, int pInit)
+        /// <summary>
+        /// Runs the algorithm and returns the value.
+        /// </summary>
+        /// <param name="pInput"></param>
+        /// <param name="pSize"></param>
+        /// <returns></returns>
+        private string Run(IEnumerable<string> pInput, int pSize)
         {
-            if (pInit == 1)
-            {
-                this.InitializeDataPart1(pInput);
-            }
-            else
-            {
-                this.InitializeDataPart2(pInput, 5);
-            }
+            this.InitializeData(pInput, pSize);
             this.Djikstra();
-            //return this.mDistance[string.Format("{0},{1}", this.mMaxColIndex, this.mMaxRowIndex)].ToString();
             return this.Result().ToString();
         }
 
-        private void PrintMap()
+        /// <summary>
+        /// Adds a predecessor to the given node.
+        /// </summary>
+        /// <param name="pNode"></param>
+        /// <param name="pPredecessor"></param>
+        private void AddPredecessor(string pNode, string pPredecessor)
         {
-            StringBuilder lStr = new StringBuilder();
-            for (int lY = 0; lY <= this.mMaxRowIndex; lY++)
+            string lOutput;
+            if (this.mNodeToPredecessor.TryGetValue(pNode, out lOutput))
             {
-                for (int lX = 0; lX <= this.mMaxColIndex; lX++)
-                {
-                    lStr.Append(this.mGraphWithValue[string.Format("{0},{1}", lX, lY)]);
-                }
-                lStr.AppendLine();
-            }
-            Console.WriteLine(lStr.ToString());
-        }
-
-        private void AddPred(string pNode, string pPred)
-        {
-            string lOut;
-            if (this.mPred.TryGetValue(pNode, out lOut))
-            {
-                this.mPred[pNode] = pPred;
+                this.mNodeToPredecessor[pNode] = pPredecessor;
             }
             else
             {
-                this.mPred.Add(pNode, pPred);
+                this.mNodeToPredecessor.Add(pNode, pPredecessor);
             }
         }
 
+        /// <summary>
+        /// Gets the result.
+        /// </summary>
+        /// <returns></returns>
         private int Result()
         {
-            List<int> lResult = new List<int>();
-            string lS = string.Format("{0},{1}", this.mMaxColIndex, this.mMaxRowIndex);
-            string lSdeb = "0,0";
-            while (!lS.Equals(lSdeb))
+            Stack<int> lPathValues = new Stack<int>();
+            string lEndNode = this.GetId(this.mMaxColIndex, this.mMaxRowIndex);
+            string lStartNode = this.GetId(0, 0);
+            while (!lEndNode.Equals(lStartNode))
             {
-                lResult.Insert(0, this.mGraphWithValue[lS]);
-                lS = this.mPred[lS];
+                lPathValues.Push(this.mGraphWithValue[lEndNode]);
+                lEndNode = this.mNodeToPredecessor[lEndNode];
             }
-            int lPopo = 0;
-            lResult.ForEach(pL => lPopo += pL);
-            return lPopo;
+            return lPathValues.Sum();
+        }
+
+        /// <summary>
+        /// Gets an id from a string.
+        /// </summary>
+        /// <param name="pX"></param>
+        /// <param name="pY"></param>
+        /// <returns></returns>
+        private string GetId(int pX, int pY)
+        {
+            return string.Format("{0},{1}", pX, pY);
         }
 
         #endregion
