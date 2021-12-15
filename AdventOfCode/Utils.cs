@@ -162,6 +162,18 @@ namespace AdventOfCode
         /// </summary>
         /// <param name="pPoint"></param>
         /// <returns></returns>
+        public static List<string> GetNeighbors(string pPoint, int pMaxCol, int pMaxRow, bool pIncludeDiagonals = false)
+        {
+            string[] lSplit = pPoint.Split(',');
+            List<Tuple<int, int>> lNeighbors = Utils.GetNeighbors(new Tuple<int,int>(int.Parse(lSplit[0]), int.Parse(lSplit[1])), pMaxCol, pMaxRow, pIncludeDiagonals);
+            return lNeighbors.Select(pTuple => string.Format("{0},{1}", pTuple.Item1, pTuple.Item2)).ToList();
+        }
+
+        /// <summary>
+        /// Get the neighbors of a point.
+        /// </summary>
+        /// <param name="pPoint"></param>
+        /// <returns></returns>
         public static List<Tuple<int, int>> GetNeighbors(Tuple<int, int> pPoint, int pMaxCol, int pMaxRow, bool pIncludeDiagonals = false)
         {
             List<Tuple<int, int>> lResult = new List<Tuple<int, int>>();

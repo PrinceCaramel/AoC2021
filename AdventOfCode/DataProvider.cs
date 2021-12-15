@@ -144,6 +144,116 @@ namespace AdventOfCode
         /// </summary>
         public const string DAY14INPUTS_PATH = @"..\..\Data\Day14Input.txt";
 
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY15TESTINPUTS_PATH = @"..\..\Data\Day15TestInput.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY15INPUTS_PATH = @"..\..\Data\Day15Input.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY16TESTINPUTS_PATH = @"..\..\Data\Day16TestInput.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY16INPUTS_PATH = @"..\..\Data\Day16Input.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY17TESTINPUTS_PATH = @"..\..\Data\Day17TestInput.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY17INPUTS_PATH = @"..\..\Data\Day17Input.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY18TESTINPUTS_PATH = @"..\..\Data\Day18TestInput.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY18INPUTS_PATH = @"..\..\Data\Day18Input.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY19TESTINPUTS_PATH = @"..\..\Data\Day19TestInput.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY19INPUTS_PATH = @"..\..\Data\Day19Input.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY20TESTINPUTS_PATH = @"..\..\Data\Day20TestInput.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY20INPUTS_PATH = @"..\..\Data\Day20Input.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY21TESTINPUTS_PATH = @"..\..\Data\Day21TestInput.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY21INPUTS_PATH = @"..\..\Data\Day21Input.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY22TESTINPUTS_PATH = @"..\..\Data\Day22TestInput.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY22INPUTS_PATH = @"..\..\Data\Day22Input.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY23TESTINPUTS_PATH = @"..\..\Data\Day23TestInput.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY23INPUTS_PATH = @"..\..\Data\Day23Input.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY24TESTINPUTS_PATH = @"..\..\Data\Day24TestInput.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY24INPUTS_PATH = @"..\..\Data\Day24Input.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY25TESTINPUTS_PATH = @"..\..\Data\Day25TestInput.txt";
+
+        /// <summary>
+        /// Stores the Day3 inputs file path.
+        /// </summary>
+        public const string DAY25INPUTS_PATH = @"..\..\Data\Day25Input.txt";
+
         #endregion
     }
 }
