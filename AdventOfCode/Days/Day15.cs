@@ -17,11 +17,30 @@ namespace AdventOfCode.Days
         /// Stores the graph.
         /// </summary>
         private Dictionary<string, int> mGraphWithValue;
+
+        /// <summary>
+        /// Stores the nodes.
+        /// </summary>
         private List<string> mNodes;
-        private Dictionary<string, int> mDistance;
+
+        /// <summary>
+        /// Stores the distance of the node.
+        /// </summary>
+        private Dictionary<string, int> mDistances;
+
+        /// <summary>
+        /// The path.
+        /// </summary>
         private Dictionary<string, string> mNodeToPredecessor;
 
+        /// <summary>
+        /// Stores the max column index.
+        /// </summary>
         private int mMaxColIndex;
+
+        /// <summary>
+        /// Stores the max row index.
+        /// </summary>
         private int mMaxRowIndex;
 
         #endregion Fields
@@ -83,7 +102,7 @@ namespace AdventOfCode.Days
         private void InitializeData(IEnumerable<string> pInput, int pSize)
         {
             this.mGraphWithValue = new Dictionary<string, int>();
-            this.mDistance = new Dictionary<string, int>();
+            this.mDistances = new Dictionary<string, int>();
             this.mNodes = new List<string>();
             int lMaxColInput = pInput.First().Count();
             int lMaxRowInput = pInput.Count();
@@ -106,13 +125,13 @@ namespace AdventOfCode.Days
                                 lValue -= 9;
                             }
                             this.mGraphWithValue.Add(lId, lValue);
-                            this.mDistance.Add(lId, int.MaxValue);
+                            this.mDistances.Add(lId, int.MaxValue);
                             this.mNodes.Add(lId);
                         }
                     }
                 }
             }
-            this.mDistance[this.GetId(0,0)] = 0;
+            this.mDistances[this.GetId(0,0)] = 0;
         }
 
         /// <summary>
@@ -125,9 +144,9 @@ namespace AdventOfCode.Days
             string lResultNode = this.GetId(-1,-1);
             foreach (string lNode in this.mNodes)
             {
-                if (this.mDistance[lNode] < lMinimum)
+                if (this.mDistances[lNode] < lMinimum)
                 {
-                    lMinimum = this.mDistance[lNode];
+                    lMinimum = this.mDistances[lNode];
                     lResultNode = lNode;
                 }
             }
@@ -141,9 +160,9 @@ namespace AdventOfCode.Days
         /// <param name="pNode2"></param>
         private void UpdateDistance(string pNode1, string pNode2)
         {
-            if (this.mDistance[pNode2] > (this.mDistance[pNode1] + this.mGraphWithValue[pNode1]))
+            if (this.mDistances[pNode2] > (this.mDistances[pNode1] + this.mGraphWithValue[pNode1]))
             {
-                this.mDistance[pNode2] = this.mDistance[pNode1] + this.mGraphWithValue[pNode1];
+                this.mDistances[pNode2] = this.mDistances[pNode1] + this.mGraphWithValue[pNode1];
                 this.AddPredecessor(pNode2, pNode1);
             }
         }
