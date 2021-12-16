@@ -114,29 +114,24 @@ namespace AdventOfCode.Days
             this.mMaxColIndex = (lMaxColInput * pSize) - 1;
             this.mMaxRowIndex =(lMaxRowInput * pSize) - 1;
             this.mNodeToPredecessor = new Dictionary<string, string>();
-            for (int lY = 0; lY < pInput.Count(); lY++)
+            for (int lY = 0; lY <= this.mMaxRowIndex; lY++)
             {
-                string lLine = pInput.ElementAt(lY);
-                for (int lX = 0; lX < lLine.Count(); lX++)
+                string lLine = pInput.ElementAt(lY% lMaxRowInput);
+                int lSizeY = lY / lMaxRowInput;
+                for (int lX = 0; lX <= this.mMaxColIndex; lX++)
                 {
-                    for (int lSizeX = 0; lSizeX < pSize; lSizeX++)
+                    int lSizeX = lX / lMaxColInput;
+                    string lId = this.GetId(lX, lY);
+                    int lValue = (int.Parse(lLine[lX% lMaxColInput].ToString()) + lSizeX + lSizeY);
+                    if (lValue >= 10)
                     {
-                        for (int lSizeY = 0; lSizeY < pSize; lSizeY++)
-                        {
-                            string lId = this.GetId(lX + (lSizeX * lMaxColInput), lY + (lSizeY * lMaxRowInput));
-                            int lValue = (int.Parse(lLine[lX].ToString()) + lSizeX + lSizeY);
-                            if (lValue >= 10)
-                            {
-                                lValue -= 9;
-                            }
-                            this.mGraphWithValue.Add(lId, lValue);
-                            this.mDistances.Add(lId, int.MaxValue);
-                            this.mNodes.Add(lId);
-                        }
+                        lValue -= 9;
                     }
+                    this.mGraphWithValue.Add(lId, lValue);
+                    this.mNodes.Add(lId);
                 }
             }
-            this.mDistances[this.GetId(0,0)] = 0;
+            this.mDistances.Add(this.GetId(0,0), 0);
         }
 
         /// <summary>
@@ -149,10 +144,14 @@ namespace AdventOfCode.Days
             string lResultNode = this.GetId(-1,-1);
             foreach (string lNode in this.mNodes)
             {
-                if (this.mDistances[lNode] < lMinimum)
+                int lValue;
+                if (this.mDistances.TryGetValue(lNode, out lValue))
                 {
-                    lMinimum = this.mDistances[lNode];
-                    lResultNode = lNode;
+                    if (lValue < lMinimum)
+                    {
+                        lMinimum = lValue;
+                        lResultNode = lNode;
+                    }
                 }
             }
             return lResultNode;
@@ -165,20 +164,33 @@ namespace AdventOfCode.Days
         /// <param name="pNode2"></param>
         private void UpdateDistance(string pNode1, string pNode2)
         {
-            if (this.mNodes.Contains(pNode2))
+            int lDistanceNode1 = this.mDistances[pNode1];
+            int lDistanceNode2;
+            bool lExist = true;
+            if (!this.mDistances.TryGetValue(pNode2, out lDistanceNode2))
             {
-                if (this.mDistances[pNode2] > (this.mDistances[pNode1] + this.mGraphWithValue[pNode1]))
+                lDistanceNode2 = int.MaxValue;
+                lExist = false;
+            }
+            int lValue = this.mGraphWithValue[pNode1];
+            if (lDistanceNode2 > (lDistanceNode1 + lValue))
+            {
+                if (lExist)
                 {
-                    this.mDistances[pNode2] = this.mDistances[pNode1] + this.mGraphWithValue[pNode1];
-                    this.AddPredecessor(pNode2, pNode1);
+                    this.mDistances[pNode2] = lDistanceNode1 + lValue;
                 }
+                else
+                {
+                    this.mDistances.Add(pNode2, lDistanceNode1 + lValue);
+                }
+                this.AddPredecessor(pNode2, pNode1);
             }
         }
 
         /// <summary>
         /// Runs the djikstra algorithm.
         /// </summary>
-        private void Djikstra()
+        private void Dijkstra()
         {
             while (this.mNodes.Any())
             {
@@ -198,7 +210,7 @@ namespace AdventOfCode.Days
         private string Run(IEnumerable<string> pInput, int pSize)
         {
             this.InitializeData(pInput, pSize);
-            this.Djikstra();
+            this.Dijkstra();
             return this.Result().ToString();
         }
 
