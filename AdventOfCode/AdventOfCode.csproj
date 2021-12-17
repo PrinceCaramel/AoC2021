@@ -46,6 +46,7 @@
     <Compile Include="DataModel\BingoBoard.cs" />
     <Compile Include="DataModel\DigitSignalPattern.cs" />
     <Compile Include="DataModel\Packet.cs" />
+    <Compile Include="DataModel\Shoot.cs" />
     <Compile Include="DataModel\WindLine.cs" />
     <Compile Include="DataProvider.cs" />
     <Compile Include="Days\ADay.cs" />
@@ -99,6 +100,8 @@
     <Content Include="Data\Day15TestInput.txt" />
     <Content Include="Data\Day16Input.txt" />
     <Content Include="Data\Day16TestInput.txt" />
+    <Content Include="Data\Day17Input.txt" />
+    <Content Include="Data\Day17TestInput.txt" />
     <Content Include="Data\Day3Inputs.txt" />
     <Content Include="Data\Day6Input.txt" />
     <Content Include="Data\Day5Input.txt" />
