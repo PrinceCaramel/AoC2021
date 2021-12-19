@@ -115,32 +115,83 @@ namespace AdventOfCode.Days
         private string ComputePart1(IEnumerable<string> pInput)
         {
             this.InitializeData(pInput);
-            List<Scanner> lScannerCopy = this.mScanners.ToList();
-            Scanner lScanner00 = lScannerCopy.Pop<Scanner>();
-            List<Vector3> lInitList = lScanner00.Beacons.ToList();
-            while (lScannerCopy.Any())
+            Dictionary<int, List<int>> lOverlapping = new Dictionary<int, List<int>>();
+            for (int lIndexI = 0; lIndexI < this.mScanners.Count(); lIndexI++)
             {
-                Scanner lPop = lScannerCopy.Pop<Scanner>();
-                if (lPop != null)
+                lOverlapping.Add(lIndexI, new List<int>());
+                for (int lIndexJ = lIndexI; lIndexJ < this.mScanners.Count(); lIndexJ++)
                 {
-                    lInitList = lPop.GetList(lInitList);
-                }
-                if (!lPop.HasOverlapped)
-                {
-                    lScannerCopy.Add(lPop);
-                }
-                else
-                {
-                    this.mScannerCoordinates.Add(lPop.Id, lPop.RelativeDistanceFromZero);
+                    if (lIndexI != lIndexJ)
+                    {
+                        if (this.mScanners[lIndexI].AreOverlapping(this.mScanners[lIndexJ]))
+                        {
+                            lOverlapping[lIndexI].Add(lIndexJ);
+                        }
+                    }
                 }
             }
-            return lInitList.Count().ToString();
+
+            List<Vector3> lBeaconsCoordinates = new List<Vector3>();
+            List<int> lScannerIds = new List<int>();
+            for (int lIndex = 0; lIndex < this.mScanners.Count(); lIndex++)
+            {
+                lScannerIds.Add(lIndex);
+            }
+            List<int> lAlreadyDone = new List<int>();
+            lBeaconsCoordinates = lBeaconsCoordinates.Union<Vector3>(this.mScanners[0].Beacons).ToList();
+            lAlreadyDone.Add(0);
+
+            while (lAlreadyDone.Count() != this.mScanners.Count())
+            {
+                foreach (int lId in lScannerIds)
+                {
+                    if (lAlreadyDone.Contains(lId))
+                    {
+                        foreach (int lOverlapId in lOverlapping[lId])
+                        {
+                            if (!lAlreadyDone.Contains(lOverlapId))
+                            {
+                                lBeaconsCoordinates = lBeaconsCoordinates.Union<Vector3>(this.mScanners[lOverlapId].GetRotatedBeacons(lBeaconsCoordinates)).ToList();
+                                lAlreadyDone.Add(lOverlapId);
+                                this.mScannerCoordinates.Add(this.mScanners[lOverlapId].Id, this.mScanners[lOverlapId].RelativeVectorFromZero);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (lAlreadyDone.Intersect<int>(lOverlapping[lId]).Any())
+                        {
+                            lBeaconsCoordinates = lBeaconsCoordinates.Union<Vector3>(this.mScanners[lId].GetRotatedBeacons(lBeaconsCoordinates)).ToList();
+                            lAlreadyDone.Add(lId);
+                            this.mScannerCoordinates.Add(this.mScanners[lId].Id, this.mScanners[lId].RelativeVectorFromZero);
+                        }
+                    }
+                }
+            }
+            
+            return lBeaconsCoordinates.Count().ToString();
         }
 
+        /// <summary>
+        /// Computes part 2
+        /// </summary>
+        /// <param name="pInput"></param>
+        /// <returns></returns>
         private string ComputePart2(IEnumerable<string> pInput)
         {
             // Part 1 already computed the dictionary.
-            return this.mScannerCoordinates.Aggregate(0, (pAcc, pNext) => pAcc = Math.Max(pAcc, this.mScannerCoordinates.Aggregate(0, (pAcc2, pNext2) => pAcc2 = Math.Max(pAcc, this.ManhattanDistance(pNext.Value, pNext2.Value)), pAcc2 => pAcc2)), pAcc => pAcc).ToString();
+            int lResult = 0;
+            for (int lIndexI = 0; lIndexI < this.mScannerCoordinates.Count(); lIndexI++)
+            {
+                for (int lIndexJ = lIndexI; lIndexJ < this.mScannerCoordinates.Count(); lIndexJ++)
+                {
+                    if (lIndexI != lIndexJ)
+                    {
+                        lResult = Math.Max(lResult, this.ManhattanDistance(this.mScannerCoordinates[lIndexI], this.mScannerCoordinates[lIndexJ]));
+                    }
+                }
+            }
+            return lResult.ToString() ;
         }
 
 

@@ -14,7 +14,14 @@ namespace AdventOfCode.DataModel
     {
         #region Fields
 
+        /// <summary>
+        /// Stores the scanner constant.
+        /// </summary>
         private const string SCANNER = "Scanner";
+
+        /// <summary>
+        /// Stores the initial beacons.
+        /// </summary>
         private List<Vector3> mInitialBeacons = new List<Vector3>();
 
         #endregion 
@@ -41,13 +48,10 @@ namespace AdventOfCode.DataModel
             }
         }
 
-        public bool HasOverlapped
-        {
-            get;
-            private set;
-        }
-
-        public Vector3 RelativeDistanceFromZero
+        /// <summary>
+        /// Relative vector from 0,0,0
+        /// </summary>
+        public Vector3 RelativeVectorFromZero
         {
             get;
             private set;
@@ -64,7 +68,6 @@ namespace AdventOfCode.DataModel
         public Scanner(IEnumerable<string> pLines)
         {
             this.InitializesScanner(pLines);
-            this.HasOverlapped = false;
         }
 
         #endregion
@@ -97,119 +100,111 @@ namespace AdventOfCode.DataModel
             return this.mInitialBeacons.Select(pVect => Vector3.Transform(pVect, pRotationMatrix).Round()).ToList();
         }
 
-
-
-
-        //public bool AreOverlapping(Scanner pScanner)
-        //{
-        //    // for a given rotation.
-        //    Matrix4x4[] lRotationMatrices = Utils.RotationMatrices.ToArray();
-        //    bool lShare12Points = false;
-        //    for (int lIndex = 0; lIndex < lRotationMatrices.Count(); lIndex++)
-        //    {
-        //        lShare12Points = this.Distance(pScanner, lRotationMatrices[lIndex]).Any();
-        //        if (lShare12Points)
-        //        {
-        //            break;
-        //        }
-        //    }
-        //    return lShare12Points;
-        //}
-
-        public List<Vector3> GetList(List<Vector3> pGoodBeacons00)
+        /// <summary>
+        /// Returns true if the given scanner overlaps with this.
+        /// </summary>
+        /// <param name="pScanner"></param>
+        /// <returns></returns>
+        public bool AreOverlapping(Scanner pScanner)
         {
-            // for a given rotation.
+            return (this.GetRotatedBeacons(pScanner.Beacons, false).Any());
+        }
+
+        /// <summary>
+        /// Gets the list of rotated beacons. Find the orientation of the scanner according to the given beacon list.
+        /// </summary>
+        /// <param name="pBeacons"></param>
+        /// <returns></returns>
+        public List<Vector3> GetRotatedBeacons(List<Vector3> pBeacons, bool pShouldComputeRelativeDistance = true)
+        {
             Matrix4x4[] lRotationMatrices = Utils.RotationMatrices.ToArray();
             List<Vector3> lResult = new List<Vector3>();
             for (int lIndex = 0; lIndex < lRotationMatrices.Count(); lIndex++)
             {
-                lResult = this.Distance(pGoodBeacons00, lRotationMatrices[lIndex]);
+                lResult = this.GetRotatedBeaconsIfOverlapWithGivenBeacons(pBeacons, lRotationMatrices[lIndex], pShouldComputeRelativeDistance);
                 if (lResult.Any())
                 {
                     break;
                 }
             }
-            return pGoodBeacons00.Union<Vector3>(lResult).ToList();
+            return lResult;
         }
 
         /// <summary>
-        /// retuns true if this scanner share 12 points according to a given rotation.
+        /// returns the list of beacon coordinates if they overlapped with the given list.
         /// </summary>
         /// <param name="pScanner"></param>
         /// <returns></returns>
-        private List<Vector3> Distance(List<Vector3> pBeaconsRelativeTo00, Matrix4x4 pRotation)
+        private List<Vector3> GetRotatedBeaconsIfOverlapWithGivenBeacons(List<Vector3> pBeacons, Matrix4x4 pRotation, bool pShouldComputeRelativeDistance = true)
         {
             List<Vector3> lResult = new List<Vector3>();
             List<Vector3> lThisRotatedBeacons = this.RotateAllBeacons(pRotation);
             List<List<Vector3>> lVectorMatrix = new List<List<Vector3>>();
-            for (int lScannerBeaconIndex = 0; lScannerBeaconIndex < pBeaconsRelativeTo00.Count(); lScannerBeaconIndex++)
+            for (int lScannerBeaconIndex = 0; lScannerBeaconIndex < pBeacons.Count(); lScannerBeaconIndex++)
             {
                 List<Vector3> lToAdd = new List<Vector3>();
                 for (int lThisBeaconIndex = 0; lThisBeaconIndex < this.Beacons.Count(); lThisBeaconIndex++)
                 {
-                    lToAdd.Add(Vector3.Subtract(pBeaconsRelativeTo00.ElementAt(lScannerBeaconIndex), lThisRotatedBeacons.ElementAt(lThisBeaconIndex)));
+                    lToAdd.Add(Vector3.Subtract(pBeacons.ElementAt(lScannerBeaconIndex), lThisRotatedBeacons.ElementAt(lThisBeaconIndex)));
                 }
                 lVectorMatrix.Add(lToAdd);
             }
 
-            Vector3? lRelativeDistance = this.GetRelativeDistance(lVectorMatrix);
-            if (lRelativeDistance != null)
+            Vector3? lRelativeVector = this.GetTranslationVector(lVectorMatrix);
+            if (lRelativeVector != null)
             {
-                lResult = lThisRotatedBeacons.Select(pVec => pVec + lRelativeDistance.Value).ToList();
+                lResult = lThisRotatedBeacons.Select(pVec => pVec + lRelativeVector.Value).ToList();
             }
 
-            if (lResult.Any())
+            if (lResult.Any() && pShouldComputeRelativeDistance)
             {
-                this.HasOverlapped = lResult.Any();
-                this.RelativeDistanceFromZero = lRelativeDistance.Value;
+                this.RelativeVectorFromZero = lRelativeVector.Value;
             }
 
             return lResult;
         }
 
-        private Vector3? GetRelativeDistance(List<List<Vector3>> pVectorMatrix)
+        /// <summary>
+        /// Gets the translation vector from a vector matrix, if it can be computed.
+        /// Returns null if they don't overlap.
+        /// </summary>
+        /// <param name="pVectorMatrix"></param>
+        /// <returns></returns>
+        private Vector3? GetTranslationVector(List<List<Vector3>> pVectorMatrix)
         {
-            Vector3? lResultatFinal = null;
+            Vector3? lTranslationVector = null;
             List<List<Vector3>> lMatrix = pVectorMatrix.ToList();
-            bool lRes = false;
-            for (int i = 0; i < lMatrix.Count(); i++)
+            bool lShouldStop = false;
+            for (int lIndex = 0; lIndex < lMatrix.Count(); lIndex++)
             {
-                List<Vector3> lLine = lMatrix[i];
-                int lFits = 0;
-                foreach (Vector3 lPos in lLine)
+                List<Vector3> lLine = lMatrix[lIndex];
+                int lVectorThatFitCount = 0;
+                foreach (Vector3 lTempTranslationVector in lLine)
                 {
-                    bool lHas = false;
-                    for (int j = 0; j < lMatrix.Count(); j++)
+                    for (int lJIndex = 0; lJIndex < lMatrix.Count(); lJIndex++)
                     {
-                        lHas = false;
-                        if (i!=j)
+                        if (lIndex != lJIndex)
                         {
-                            lHas = lMatrix[j].Any(pV => pV == lPos);
-                        }
-                        if (lHas)
-                        {
-                            lFits++;
+                            if (lMatrix[lJIndex].Any(pVector => pVector == lTempTranslationVector))
+                            {
+                                lVectorThatFitCount++;
+                            }
                         }
                     }
-                    if (lFits >= 11)
+                    if (lVectorThatFitCount >= 11)
                     {
-                        lRes = true;
-                        lResultatFinal = lPos;
+                        lShouldStop = true;
+                        lTranslationVector = lTempTranslationVector;
                         break;
                     }
-                    
                 }
-                if (lRes)
+                if (lShouldStop)
                 {
                     break;
                 }
             }
-            return lResultatFinal;
-
-            //return null;
+            return lTranslationVector;
         }
-
-
 
         /// <summary>
         /// Prints all beacons.
@@ -223,17 +218,5 @@ namespace AdventOfCode.DataModel
         }
 
         #endregion
-    }
-
-    public struct VectorAndRotationMatrix
-    {
-        public Vector3 Vector;
-        public Matrix4x4 Matrix;
-
-        public VectorAndRotationMatrix(Vector3 pVector, Matrix4x4 pMatrix)
-        {
-            this.Vector = pVector;
-            this.Matrix = pMatrix;
-        }
     }
 }
