@@ -40,7 +40,7 @@ namespace AdventOfCode.Days
         {
             get
             {
-                return DataProvider.DAY19TESTINPUTS_PATH;
+                return DataProvider.DAY19INPUTS_PATH;
             }
         }
 
