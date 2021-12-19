@@ -350,29 +350,6 @@ namespace AdventOfCode
             }
             Utils.mRotationMatrices = Utils.mRotationMatrices.Distinct(new Matrix4x4EqualityComparer()).ToList();
         }
-
-        /// <summary>
-        /// Transposes a matrix.
-        /// </summary>
-        /// <param name="pMatrix"></param>
-        /// <returns></returns>
-        public static int[,] Transpose(int[,] pMatrix)
-        {
-            int lWidth = pMatrix.GetLength(0);
-            int lHeight = pMatrix.GetLength(1);
-
-            int[,] lResult = new int[lHeight, lWidth];
-
-            for (int lIIndex = 0; lIIndex < lWidth; lIIndex++)
-            {
-                for (int lJIndex = 0; lJIndex < lHeight; lJIndex++)
-                {
-                    lResult[lJIndex, lIIndex] = pMatrix[lIIndex, lJIndex];
-                }
-            }
-
-            return lResult;
-        }
     }
 
     /// <summary>

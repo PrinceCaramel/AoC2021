@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode.Days
 {
+    // 13065 too low
+
     /// <summary>
     /// Class that defines the puzzles of the day.
     /// </summary>
@@ -20,9 +22,16 @@ namespace AdventOfCode.Days
         /// </summary>
         private List<Scanner> mScanners = new List<Scanner>();
 
+        /// <summary>
+        /// Scanner coordinates.
+        /// </summary>
+        private Dictionary<int, Vector3> mScannerCoordinates = new Dictionary<int, Vector3>();
+
         #endregion Fields
 
         #region Properties
+
+        protected override bool ShouldTimeStamp => true;
 
         /// <summary>
         /// Gets the path of the input.
@@ -53,7 +62,7 @@ namespace AdventOfCode.Days
         {
             get
             {
-                return pInput => pInput.First();
+                return pInput => this.ComputePart2(pInput);
             }
         }
 
@@ -95,15 +104,106 @@ namespace AdventOfCode.Days
                 }
                 this.mScanners.Add(new Scanner(lScanner));
             }
+            this.mScannerCoordinates.Add(0, new Vector3(0, 0, 0));
         }
 
+        /// <summary>
+        /// Computes the part 1.
+        /// </summary>
+        /// <param name="pInput"></param>
+        /// <returns></returns>
         private string ComputePart1(IEnumerable<string> pInput)
         {
             this.InitializeData(pInput);
-            Scanner lScanner = this.mScanners.First();
-            Scanner lScanner2 = this.mScanners.Last();
+            Dictionary<int, List<int>> lOverlapping = new Dictionary<int, List<int>>();
+            for (int lIndexI = 0; lIndexI < this.mScanners.Count(); lIndexI++)
+            {
+                lOverlapping.Add(lIndexI, new List<int>());
+                for (int lIndexJ = lIndexI; lIndexJ < this.mScanners.Count(); lIndexJ++)
+                {
+                    if (lIndexI != lIndexJ)
+                    {
+                        if (this.mScanners[lIndexI].AreOverlapping(this.mScanners[lIndexJ]))
+                        {
+                            lOverlapping[lIndexI].Add(lIndexJ);
+                        }
+                    }
+                }
+            }
 
-            return lScanner.AreOverlapping(lScanner2).ToString();
+            List<Vector3> lBeaconsCoordinates = new List<Vector3>();
+            List<int> lScannerIds = new List<int>();
+            for (int lIndex = 0; lIndex < this.mScanners.Count(); lIndex++)
+            {
+                lScannerIds.Add(lIndex);
+            }
+            List<int> lAlreadyDone = new List<int>();
+            lBeaconsCoordinates = lBeaconsCoordinates.Union<Vector3>(this.mScanners[0].Beacons).ToList();
+            lAlreadyDone.Add(0);
+
+            while (lAlreadyDone.Count() != this.mScanners.Count())
+            {
+                foreach (int lId in lScannerIds)
+                {
+                    if (lAlreadyDone.Contains(lId))
+                    {
+                        foreach (int lOverlapId in lOverlapping[lId])
+                        {
+                            if (!lAlreadyDone.Contains(lOverlapId))
+                            {
+                                lBeaconsCoordinates = lBeaconsCoordinates.Union<Vector3>(this.mScanners[lOverlapId].GetRotatedBeacons(lBeaconsCoordinates)).ToList();
+                                lAlreadyDone.Add(lOverlapId);
+                                this.mScannerCoordinates.Add(this.mScanners[lOverlapId].Id, this.mScanners[lOverlapId].RelativeVectorFromZero);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (lAlreadyDone.Intersect<int>(lOverlapping[lId]).Any())
+                        {
+                            lBeaconsCoordinates = lBeaconsCoordinates.Union<Vector3>(this.mScanners[lId].GetRotatedBeacons(lBeaconsCoordinates)).ToList();
+                            lAlreadyDone.Add(lId);
+                            this.mScannerCoordinates.Add(this.mScanners[lId].Id, this.mScanners[lId].RelativeVectorFromZero);
+                        }
+                    }
+                }
+            }
+            
+            return lBeaconsCoordinates.Count().ToString();
+        }
+
+        /// <summary>
+        /// Computes part 2
+        /// </summary>
+        /// <param name="pInput"></param>
+        /// <returns></returns>
+        private string ComputePart2(IEnumerable<string> pInput)
+        {
+            // Part 1 already computed the dictionary.
+            int lResult = 0;
+            for (int lIndexI = 0; lIndexI < this.mScannerCoordinates.Count(); lIndexI++)
+            {
+                for (int lIndexJ = lIndexI; lIndexJ < this.mScannerCoordinates.Count(); lIndexJ++)
+                {
+                    if (lIndexI != lIndexJ)
+                    {
+                        lResult = Math.Max(lResult, this.ManhattanDistance(this.mScannerCoordinates[lIndexI], this.mScannerCoordinates[lIndexJ]));
+                    }
+                }
+            }
+            return lResult.ToString() ;
+        }
+
+
+        /// <summary>
+        /// Returns the manhattan distance between two vectors.
+        /// </summary>
+        /// <param name="pVector1"></param>
+        /// <param name="pVector2"></param>
+        /// <returns></returns>
+        private int ManhattanDistance(Vector3 pVector1, Vector3 pVector2)
+        {
+            return (int)Math.Abs(pVector1.X - pVector2.X) + (int)Math.Abs(pVector1.Y - pVector2.Y) + (int)Math.Abs(pVector1.Z - pVector2.Z);
         }
 
         #endregion
