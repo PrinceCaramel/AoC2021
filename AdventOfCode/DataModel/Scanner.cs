@@ -41,6 +41,18 @@ namespace AdventOfCode.DataModel
             }
         }
 
+        public bool HasOverlapped
+        {
+            get;
+            private set;
+        }
+
+        public Vector3 RelativeDistanceFromZero
+        {
+            get;
+            private set;
+        }
+
         #endregion
 
         #region Constructors
@@ -52,6 +64,7 @@ namespace AdventOfCode.DataModel
         public Scanner(IEnumerable<string> pLines)
         {
             this.InitializesScanner(pLines);
+            this.HasOverlapped = false;
         }
 
         #endregion
@@ -87,20 +100,36 @@ namespace AdventOfCode.DataModel
 
 
 
-        public bool AreOverlapping(Scanner pScanner)
+        //public bool AreOverlapping(Scanner pScanner)
+        //{
+        //    // for a given rotation.
+        //    Matrix4x4[] lRotationMatrices = Utils.RotationMatrices.ToArray();
+        //    bool lShare12Points = false;
+        //    for (int lIndex = 0; lIndex < lRotationMatrices.Count(); lIndex++)
+        //    {
+        //        lShare12Points = this.Distance(pScanner, lRotationMatrices[lIndex]).Any();
+        //        if (lShare12Points)
+        //        {
+        //            break;
+        //        }
+        //    }
+        //    return lShare12Points;
+        //}
+
+        public List<Vector3> GetList(List<Vector3> pGoodBeacons00)
         {
             // for a given rotation.
             Matrix4x4[] lRotationMatrices = Utils.RotationMatrices.ToArray();
-            bool lShare12Points = false;
+            List<Vector3> lResult = new List<Vector3>();
             for (int lIndex = 0; lIndex < lRotationMatrices.Count(); lIndex++)
             {
-                lShare12Points = this.Distance(pScanner, lRotationMatrices[lIndex]).Any();
-                if (lShare12Points)
+                lResult = this.Distance(pGoodBeacons00, lRotationMatrices[lIndex]);
+                if (lResult.Any())
                 {
                     break;
                 }
             }
-            return lShare12Points;
+            return pGoodBeacons00.Union<Vector3>(lResult).ToList();
         }
 
         /// <summary>
@@ -108,25 +137,31 @@ namespace AdventOfCode.DataModel
         /// </summary>
         /// <param name="pScanner"></param>
         /// <returns></returns>
-        private List<Vector3> Distance(Scanner pScanner, Matrix4x4 pRotation)
+        private List<Vector3> Distance(List<Vector3> pBeaconsRelativeTo00, Matrix4x4 pRotation)
         {
             List<Vector3> lResult = new List<Vector3>();
-            List<Vector3> lRotatedBeacons = pScanner.RotateAllBeacons(pRotation);
+            List<Vector3> lThisRotatedBeacons = this.RotateAllBeacons(pRotation);
             List<List<Vector3>> lVectorMatrix = new List<List<Vector3>>();
-            for (int lScannerBeaconIndex = 0; lScannerBeaconIndex < lRotatedBeacons.Count(); lScannerBeaconIndex++)
+            for (int lScannerBeaconIndex = 0; lScannerBeaconIndex < pBeaconsRelativeTo00.Count(); lScannerBeaconIndex++)
             {
                 List<Vector3> lToAdd = new List<Vector3>();
                 for (int lThisBeaconIndex = 0; lThisBeaconIndex < this.Beacons.Count(); lThisBeaconIndex++)
                 {
-                    lToAdd.Add(Vector3.Subtract(this.Beacons.ElementAt(lThisBeaconIndex), lRotatedBeacons.ElementAt(lScannerBeaconIndex)));
+                    lToAdd.Add(Vector3.Subtract(pBeaconsRelativeTo00.ElementAt(lScannerBeaconIndex), lThisRotatedBeacons.ElementAt(lThisBeaconIndex)));
                 }
                 lVectorMatrix.Add(lToAdd);
             }
 
-            Vector3? lRelateiveDistance = this.GetRelativeDistance(lVectorMatrix);
-            if (lRelateiveDistance != null)
+            Vector3? lRelativeDistance = this.GetRelativeDistance(lVectorMatrix);
+            if (lRelativeDistance != null)
             {
-                lResult = lRotatedBeacons.Select(pVec => pVec + lRelateiveDistance.Value).ToList();
+                lResult = lThisRotatedBeacons.Select(pVec => pVec + lRelativeDistance.Value).ToList();
+            }
+
+            if (lResult.Any())
+            {
+                this.HasOverlapped = lResult.Any();
+                this.RelativeDistanceFromZero = lRelativeDistance.Value;
             }
 
             return lResult;
