@@ -35,6 +35,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,6 +48,7 @@
     <Compile Include="DataModel\BingoBoard.cs" />
     <Compile Include="DataModel\DigitSignalPattern.cs" />
     <Compile Include="DataModel\Packet.cs" />
+    <Compile Include="DataModel\Scanner.cs" />
     <Compile Include="DataModel\Shoot.cs" />
     <Compile Include="DataModel\SnailPair.cs" />
     <Compile Include="DataModel\WindLine.cs" />
@@ -105,6 +108,8 @@
     <Content Include="Data\Day17TestInput.txt" />
     <Content Include="Data\Day18Input.txt" />
     <Content Include="Data\Day18TestInput.txt" />
+    <Content Include="Data\Day19Input.txt" />
+    <Content Include="Data\Day19TestInput.txt" />
     <Content Include="Data\Day3Inputs.txt" />
     <Content Include="Data\Day6Input.txt" />
     <Content Include="Data\Day5Input.txt" />

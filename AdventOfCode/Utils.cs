@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +13,26 @@ namespace AdventOfCode
     /// </summary>
     public static class Utils
     {
+        /// <summary>
+        /// Stores the rotation matrices.
+        /// </summary>
+        private static List<Matrix4x4> mRotationMatrices = new List<Matrix4x4>();
+
+        /// <summary>
+        /// Gets the rotation matrices.
+        /// </summary>
+        public static List<Matrix4x4> RotationMatrices
+        {
+            get
+            {
+                if (!Utils.mRotationMatrices.Any())
+                {
+                    Utils.InitializesRotationMatrices();
+                }
+                return Utils.mRotationMatrices;
+            }
+        }
+
         /// <summary>
         /// Stores the forward constant.
         /// </summary>
@@ -258,6 +279,141 @@ namespace AdventOfCode
         public static void TuplePrint(this Tuple<int,int> pTuple)
         {
             Console.WriteLine(string.Format("Tuple X:{0} | Y:{1}", pTuple.Item1, pTuple.Item2));
+        }
+
+        /// <summary>
+        /// Prints a matrix.
+        /// </summary>
+        /// <param name="pMatrix"></param>
+        /// <returns></returns>
+        public static string Print(this Matrix4x4 pMatrix)
+        {
+            StringBuilder lStrBuilder = new StringBuilder();
+            lStrBuilder.AppendLine(pMatrix.M11 + " " + pMatrix.M12 + " " + pMatrix.M13 + " " + pMatrix.M14);
+            lStrBuilder.AppendLine(pMatrix.M21 + " " + pMatrix.M22 + " " + pMatrix.M23 + " " + pMatrix.M24);
+            lStrBuilder.AppendLine(pMatrix.M31 + " " + pMatrix.M32 + " " + pMatrix.M33 + " " + pMatrix.M34);
+            lStrBuilder.AppendLine(pMatrix.M41 + " " + pMatrix.M42 + " " + pMatrix.M43 + " " + pMatrix.M44);
+            return lStrBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Prints a vector3.
+        /// </summary>
+        /// <param name="pVector"></param>
+        /// <returns></returns>
+        public static string Print(this Vector3 pVector)
+        {
+            return string.Format("x:{0} y:{1} z:{2}", pVector.X, pVector.Y, pVector.Z);
+        }
+
+        /// <summary>
+        /// Rounds a vector.
+        /// </summary>
+        /// <param name="pVector"></param>
+        public static Vector3 Round(this Vector3 pVector)
+        {
+            pVector.X = (float)Math.Round((double)pVector.X);
+            pVector.Y = (float)Math.Round((double)pVector.Y);
+            pVector.Z = (float)Math.Round((double)pVector.Z);
+            return pVector;
+        }
+
+        /// <summary>
+        /// Initializes the rotation matrices.
+        /// </summary>
+        private static void InitializesRotationMatrices()
+        {
+            Utils.mRotationMatrices.Clear();
+            Matrix4x4 lRot0 = Matrix4x4.Identity;
+            Matrix4x4 lRotX90 = Matrix4x4.CreateRotationX((float)(Math.PI / 2));
+            Matrix4x4 lRotX180 = Matrix4x4.CreateRotationX((float)(Math.PI));
+            Matrix4x4 lRotX270 = Matrix4x4.CreateRotationX((float)(3 * Math.PI / 2));
+            Matrix4x4 lRotY90 = Matrix4x4.CreateRotationY((float)(Math.PI / 2));
+            Matrix4x4 lRotY180 = Matrix4x4.CreateRotationY((float)(Math.PI));
+            Matrix4x4 lRotY270 = Matrix4x4.CreateRotationY((float)(3 * Math.PI / 2));
+            Matrix4x4 lRotZ90 = Matrix4x4.CreateRotationZ((float)(Math.PI / 2));
+            Matrix4x4 lRotZ180 = Matrix4x4.CreateRotationZ((float)(Math.PI));
+            Matrix4x4 lRotZ270 = Matrix4x4.CreateRotationZ((float)(3 * Math.PI / 2));
+
+            Matrix4x4[] lXRotations = new Matrix4x4[] { lRot0, lRotX90, lRotX180, lRotX270 };
+            Matrix4x4[] lYRotations = new Matrix4x4[] { lRot0, lRotY90, lRotY180, lRotY270 };
+            Matrix4x4[] lZRotations = new Matrix4x4[] { lRot0, lRotZ90, lRotZ180, lRotZ270 };
+            for (int lX = 0; lX < 4; lX++)
+            {
+                for (int lY = 0; lY < 4; lY++)
+                {
+                    for (int lZ = 0; lZ < 4; lZ++)
+                    {
+                        Utils.mRotationMatrices.Add(Matrix4x4.Multiply(Matrix4x4.Multiply(lXRotations[lX], lYRotations[lY]), lZRotations[lZ]));
+                    }
+                }
+            }
+            Utils.mRotationMatrices = Utils.mRotationMatrices.Distinct(new Matrix4x4EqualityComparer()).ToList();
+        }
+
+        /// <summary>
+        /// Transposes a matrix.
+        /// </summary>
+        /// <param name="pMatrix"></param>
+        /// <returns></returns>
+        public static int[,] Transpose(int[,] pMatrix)
+        {
+            int lWidth = pMatrix.GetLength(0);
+            int lHeight = pMatrix.GetLength(1);
+
+            int[,] lResult = new int[lHeight, lWidth];
+
+            for (int lIIndex = 0; lIIndex < lWidth; lIIndex++)
+            {
+                for (int lJIndex = 0; lJIndex < lHeight; lJIndex++)
+                {
+                    lResult[lJIndex, lIIndex] = pMatrix[lIIndex, lJIndex];
+                }
+            }
+
+            return lResult;
+        }
+    }
+
+    /// <summary>
+    /// Matrix4x4 equality comparer.
+    /// </summary>
+    public class Matrix4x4EqualityComparer : IEqualityComparer<Matrix4x4>
+    {
+        /// <summary>
+        /// Checks if two matrices are equals.
+        /// </summary>
+        /// <param name="pMatrix1"></param>
+        /// <param name="pMatrix2"></param>
+        /// <returns></returns>
+        public bool Equals(Matrix4x4 pMatrix1, Matrix4x4 pMatrix2)
+        {
+            return (Math.Round(pMatrix1.M11) == Math.Round(pMatrix2.M11)) &&
+                (Math.Round(pMatrix1.M12) == Math.Round(pMatrix2.M12)) &&
+                (Math.Round(pMatrix1.M13) == Math.Round(pMatrix2.M13)) &&
+                (Math.Round(pMatrix1.M14) == Math.Round(pMatrix2.M14)) &&
+                (Math.Round(pMatrix1.M21) == Math.Round(pMatrix2.M21)) &&
+                (Math.Round(pMatrix1.M22) == Math.Round(pMatrix2.M22)) &&
+                (Math.Round(pMatrix1.M23) == Math.Round(pMatrix2.M23)) &&
+                (Math.Round(pMatrix1.M24) == Math.Round(pMatrix2.M24)) &&
+                (Math.Round(pMatrix1.M31) == Math.Round(pMatrix2.M31)) &&
+                (Math.Round(pMatrix1.M32) == Math.Round(pMatrix2.M32)) &&
+                (Math.Round(pMatrix1.M33) == Math.Round(pMatrix2.M33)) &&
+                (Math.Round(pMatrix1.M34) == Math.Round(pMatrix2.M34)) &&
+                (Math.Round(pMatrix1.M41) == Math.Round(pMatrix2.M41)) &&
+                (Math.Round(pMatrix1.M42) == Math.Round(pMatrix2.M42)) &&
+                (Math.Round(pMatrix1.M43) == Math.Round(pMatrix2.M43)) &&
+                (Math.Round(pMatrix1.M44) == Math.Round(pMatrix2.M44));
+        }
+
+        /// <summary>
+        /// Gets the hash.
+        /// </summary>
+        /// <param name="pMatrix"></param>
+        /// <returns></returns>
+        public int GetHashCode(Matrix4x4 pMatrix)
+        {
+            return 0;
         }
     }
 }

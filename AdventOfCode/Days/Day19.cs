@@ -1,6 +1,8 @@
-﻿using System;
+﻿using AdventOfCode.DataModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +14,11 @@ namespace AdventOfCode.Days
     public class Day19 : ADay
     {
         #region Fields
+
+        /// <summary>
+        /// Stores the scanners.
+        /// </summary>
+        private List<Scanner> mScanners = new List<Scanner>();
 
         #endregion Fields
 
@@ -35,7 +42,7 @@ namespace AdventOfCode.Days
         {
             get
             {
-                return pInput => pInput.First();
+                return pInput => this.ComputePart1(pInput);
             }
         }
 
@@ -71,6 +78,32 @@ namespace AdventOfCode.Days
         /// <param name="pInput"></param>
         private void InitializeData(IEnumerable<string> pInput)
         {
+            this.mScanners.Clear();
+            List<string> lInput = pInput.ToList();
+            while (lInput.Any())
+            {
+                List<string> lScanner = new List<string>();
+                string lLine = lInput.Pop<string>();
+                while (!string.IsNullOrEmpty(lLine))
+                {
+                    lScanner.Add(lLine);
+                    lLine = lInput.Pop<string>();
+                }
+                if (!string.IsNullOrEmpty(lLine))
+                {
+                    lScanner.Add(lLine);
+                }
+                this.mScanners.Add(new Scanner(lScanner));
+            }
+        }
+
+        private string ComputePart1(IEnumerable<string> pInput)
+        {
+            this.InitializeData(pInput);
+            Scanner lScanner = this.mScanners.First();
+            Scanner lScanner2 = this.mScanners.Last();
+
+            return lScanner.AreOverlapping(lScanner2).ToString();
         }
 
         #endregion
