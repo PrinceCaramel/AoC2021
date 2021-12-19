@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode.Days
 {
-    // 13065 too low
-
     /// <summary>
     /// Class that defines the puzzles of the day.
     /// </summary>
@@ -30,8 +28,6 @@ namespace AdventOfCode.Days
         #endregion Fields
 
         #region Properties
-
-        protected override bool ShouldTimeStamp => true;
 
         /// <summary>
         /// Gets the path of the input.
