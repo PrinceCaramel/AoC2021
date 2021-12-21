@@ -112,6 +112,8 @@
     <Content Include="Data\Day19TestInput.txt" />
     <Content Include="Data\Day20Input.txt" />
     <Content Include="Data\Day20TestInput.txt" />
+    <Content Include="Data\Day21Input.txt" />
+    <Content Include="Data\Day21TestInput.txt" />
     <Content Include="Data\Day3Inputs.txt" />
     <Content Include="Data\Day6Input.txt" />
     <Content Include="Data\Day5Input.txt" />
