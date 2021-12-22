@@ -29,6 +29,8 @@ namespace AdventOfCode.Days
 
         #region Properties
 
+        protected override bool ShouldTimeStamp => true;
+
         /// <summary>
         /// Gets the path of the input.
         /// </summary>
